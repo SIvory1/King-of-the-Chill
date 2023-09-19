@@ -66,7 +66,7 @@ public class PlayerMovementTest : NetworkBehaviour
     public float iFramesTimer;
     public float iFramesTimerMax;
     public float matAlpha;
-/*
+
     public void Awake()
     {
 
@@ -83,7 +83,7 @@ public class PlayerMovementTest : NetworkBehaviour
 
         // freezes rotation
         rb.freezeRotation = true;
-      
+
 
     }
 
@@ -444,13 +444,13 @@ public class PlayerMovementTest : NetworkBehaviour
         if (Time.timeScale == 0)
             return;
 
-
+/*
         // used for locking slide in place, no rotation 
         if (isDodging == false)
         {
             //player movement, can only use vector2 for controller so we use a vector3
             // but store the x and z in a vector 2
-           Vector2 inputVector = playerInputActions.Gameplay.Walk.ReadValue<Vector2>();
+            Vector2 inputVector = playerInputActions.Gameplay.Walk.ReadValue<Vector2>();
            Vector3 tempVec = new Vector3(inputVector.x, 0, inputVector.y);
 
             // adds force to the vector, do this seperately so we can use
@@ -467,6 +467,6 @@ public class PlayerMovementTest : NetworkBehaviour
                 rb.MoveRotation(targetRotation);
             }
         }
-    
-        */
+*/
+    }
 }
