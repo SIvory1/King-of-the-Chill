@@ -12,8 +12,6 @@ public class PlayerInputs : MonoBehaviour
     // https://www.youtube.com/watch?v=WIl6ysorTE0
 
     //input fields
-
-    // private PlayerControls playerInputActions;
     private InputActionAsset inputAsset;
     private InputActionMap player;
     private InputAction move;
@@ -29,21 +27,28 @@ public class PlayerInputs : MonoBehaviour
     private void Awake()
     {      
         rb = this.GetComponent<Rigidbody>();
-        // playerInputActions = new PlayerControls();      
 
         inputAsset = GetComponent<PlayerInput>().actions;
         player = inputAsset.FindActionMap("Player");
     }
 
+    //reason we do this with direct refernces to strings is so the system can tell the difference between inputsystems
     private void OnEnable()
     {
-       // playerInputActions.Player.Movement.started += DoAttack;
+        // playerInputActions.Player.Movement.started += DoAttack;
+        player.FindAction("Attack").started += DoAttack;
+        player.FindAction("Block").started += DoBlock;
+        player.FindAction("Lunge").started += DoLunge;
+        player.FindAction("Dodge").started += DoDodge;
         move = player.FindAction("Movement");
         player.Enable();
     }
 
+   
+
     private void OnDisable()
     {
+        player.FindAction("Attack").started -= DoAttack;
         player.Disable();
     }
 
@@ -52,6 +57,25 @@ public class PlayerInputs : MonoBehaviour
         Movement();
     }
 
+    private void DoAttack(InputAction.CallbackContext obj)
+    {
+        print("attackjhon");
+    }
+
+    private void DoBlock(InputAction.CallbackContext obj)
+    {
+        print("blockjohn");
+    }
+
+    private void DoLunge(InputAction.CallbackContext obj)
+    {
+        print("lungejohn");
+    }
+
+    private void DoDodge(InputAction.CallbackContext obj)
+    {
+        print("dodgejohn");
+    }
 
     public void Movement()
     {
