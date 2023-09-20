@@ -78,26 +78,38 @@ public class PlayerInputs : MonoBehaviour
 
     #region Blocking
     bool isBlocking;
+    bool blockCooldownFinished;
     private void DoBlock(InputAction.CallbackContext obj)
     {
-        print("blockjohn");
-        //when a player is hit and stunned they wont be able to sue abiolites ergo we check to see if they can use block
-        if (!canUseAbility)
-            return;
-        currentSpeed = 0f;
+        if (!isBlocking && canUseAbility)
+        {
+          currentSpeed = 0f;
         // stops the player form using other ablities 
-        isBlocking = true;
-        StartCoroutine(BlockCooldown());
-        canUseAbility = false;
+          isBlocking = true;
+          StartCoroutine(UnblockCooldown());
+          print("inblock");
+          canUseAbility = false;
+        }
+        else if (isBlocking && blockCooldownFinished)
+        {
+            print("unblock");
+
+            currentSpeed = maxSpeed;
+            // stops the player form using other ablities 
+            isBlocking = false;
+            blockCooldownFinished = false;
+            canUseAbility = true;
+        }    
     }
 
-    // we choose how long the player is in the block for 
-    float exitBlockTimer = 1.5f;
-    IEnumerator BlockCooldown()
+    // maybe do all this in the animations, want to make it so if the player blocks they are locked into the full aniamtion
+    // //beofre they unblock
+    float exitBlockTimer = 3f;
+    IEnumerator UnblockCooldown()
     {
         yield return new WaitForSeconds(exitBlockTimer);
-        canUseAbility = true;
-        currentSpeed = maxSpeed;
+        print("johnblock");
+        blockCooldownFinished = true;
     }
     #endregion
 
