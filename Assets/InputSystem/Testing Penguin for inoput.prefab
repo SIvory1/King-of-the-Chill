@@ -64,9 +64,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84ff21f67d9a60a41ba0037ce23f9690, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 20
-  maxSpeed: 5
-  forceDirection: {x: 0, y: 0, z: 0}
+  currentSpeed: 0
+  maxSpeed: 20
+  dodgeSpeedMultiplier: 4
 --- !u!1001 &1639065519690914831
 PrefabInstance:
   m_ObjectHideFlags: 0
