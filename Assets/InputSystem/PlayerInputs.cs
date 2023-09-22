@@ -32,6 +32,7 @@ public class PlayerInputs : MonoBehaviour
 
     private void Start()
     {
+        unblockCoroutineVar = UnblockCooldown();
         currentSpeed = maxSpeed;
         canUseAbility = true;
     }
@@ -58,6 +59,8 @@ public class PlayerInputs : MonoBehaviour
         player.Disable();
     }
 
+    private void Update() {}
+
     // in the original we just had a bunch of if statements and timers/bool in update. will do it using courtines this time, alot of the code can
     //probaly be repourposed but also a bunch of it will be mess
     private void FixedUpdate()
@@ -71,13 +74,18 @@ public class PlayerInputs : MonoBehaviour
     // proably doint even need to have an attack script, i think we just doa spehrecast infront of the player and use that to add forces. i have 
     // this from hamster wrangler probaly wont be hto ad to set up. 
     private void DoAttack(InputAction.CallbackContext obj)
-    {
+    {    
         print("attackjhon");
+    }
+    private void DoLunge(InputAction.CallbackContext obj)
+    {
+        print("lungejohn");
     }
 
 
     #region Blocking
-    bool isBlocking;
+    IEnumerator unblockCoroutineVar;
+    public bool isBlocking;
     bool blockCooldownFinished;
     private void DoBlock(InputAction.CallbackContext obj)
     {
@@ -88,7 +96,7 @@ public class PlayerInputs : MonoBehaviour
           isBlocking = true;
           StartCoroutine(UnblockCooldown());
           print("inblock");
-          canUseAbility = false;
+          canUseAbility = false;      
         }
         else if (isBlocking && blockCooldownFinished)
         {
@@ -103,7 +111,7 @@ public class PlayerInputs : MonoBehaviour
     }
 
     // maybe do all this in the animations, want to make it so if the player blocks they are locked into the full aniamtion
-    // //beofre they unblock
+    // beofre they unblock
     float exitBlockTimer = 3f;
     IEnumerator UnblockCooldown()
     {
@@ -113,10 +121,17 @@ public class PlayerInputs : MonoBehaviour
     }
     #endregion
 
-    private void DoLunge(InputAction.CallbackContext obj)
+    // reusable function to reset ablitie bools, can only be used to set things true which would need to be taken into account
+    // not sure if it is actaully viable as alot of this will be done in animations
+    IEnumerator ResetAbilityCooldown(bool[] boolArray, float coolDownTimer)
     {
-        print("lungejohn");
+        yield return new WaitForSeconds(coolDownTimer);
+        for (int x = 0; x < boolArray.Length; x++)
+        {
+            boolArray[x] = true;
+        }
     }
+
 
 
     bool isDodging;
@@ -127,11 +142,12 @@ public class PlayerInputs : MonoBehaviour
 
         // used for locking slide in place and particle effect
         isDodging = true;
-        // makes it so player cnat use any other ability mid use
+      
         // adds a force to the player, spped can be adjusted with dodgeMultiplier
         rb.AddForce(transform.forward * dodgeSpeedMultiplier, ForceMode.Impulse);
 
         StartCoroutine(DodgeCooldown());
+        // makes it so player cnat use any other ability mid use
         canUseAbility = false;
 
     }
@@ -151,8 +167,8 @@ public class PlayerInputs : MonoBehaviour
     {
         if (Time.timeScale == 0)
             return;
-        //   if (isDodging)
-        //       return;
+           if (isDodging)
+               return;
 
         //player movement, can only use vector2 for controller so we use a vector3
         // but store the x and z in a vector 2
@@ -173,30 +189,33 @@ public class PlayerInputs : MonoBehaviour
             rb.MoveRotation(targetRotation);
         }
     }
+    // when a player dashes at someone when they are blocking it breaks them out of the dodge.
+    GameObject enemy;
+    public void OnCollisionEnter(Collision col)
+    {
+        // for player respawning
+        //  if (respawning == true)
+        //     return;
+
+        if (!isDodging)
+            return;
+
+        if (col.gameObject.tag == "Player")
+            enemy = col.gameObject;
+   
+        if (enemy.GetComponent<PlayerInputs>().isBlocking)
+        {
+            enemy.GetComponent<PlayerInputs>().StopCoroutine(unblockCoroutineVar);
+            enemy.GetComponent<PlayerInputs>().currentSpeed = enemy.GetComponent<PlayerInputs>().maxSpeed;
+            // stops the player form using other ablities 
+            enemy.GetComponent<PlayerInputs>().isBlocking = false;
+            enemy.GetComponent<PlayerInputs>().blockCooldownFinished = false;
+            enemy.GetComponent<PlayerInputs>().canUseAbility = true;
+            print("contact block broken");
+        }
+    }
+    
 }
-/*   // when a player dashes at someone when they are blocking it breaks them out of the dodge.
-   GameObject enemy;
-   public void OnCollisionEnter(Collision col)
-   {
-       // for player respawning
-       //  if (respawning == true)
-       //     return;
 
-       if (!isDodging)
-           return;
 
-       if (col.gameObject.tag == "Player")
-           enemy = col.gameObject;
 
-       if (enemy.GetComponent<PlayerInput>().isBlocking)
-       {
-           // sets all the vairables needed to stun the enemy player
-           // use this stun counter so the stun aniamtion doesnt loop
-           enemy.GetComponent<PlayerMovementTest>().isStunnedCounter += 1;
-           enemy.GetComponent<PlayerMovementTest>().isStunned = true;
-           enemy.GetComponent<PlayerMovementTest>().ForceUnblock();
-
-       }
-   }
-/*
-*/
