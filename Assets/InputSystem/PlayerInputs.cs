@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-
+// THEY TOO DAMN SLIDY< THIS GAME DOESNT WORK RN< ICE BERG NEEDS WORK< IT LOOKS BAD< JUST EVEREYTHIGN
 public class PlayerInputs : MonoBehaviour
 {
     // https://www.youtube.com/watch?v=l9HrraxtdGY
@@ -21,6 +21,10 @@ public class PlayerInputs : MonoBehaviour
     //Abilities
     bool canUseAbility;
     [SerializeField] float dodgeSpeedMultiplier;
+
+    [SerializeField] GameObject attackObject;
+    [SerializeField] GameObject lungeObject;
+
 
     private void Awake()
     {
@@ -74,14 +78,37 @@ public class PlayerInputs : MonoBehaviour
     // proably doint even need to have an attack script, i think we just doa spehrecast infront of the player and use that to add forces. i have 
     // this from hamster wrangler probaly wont be hto ad to set up. 
     private void DoAttack(InputAction.CallbackContext obj)
-    {    
-        print("attackjhon");
-    }
-    private void DoLunge(InputAction.CallbackContext obj)
     {
-        print("lungejohn");
+        if (!canUseAbility)
+            return;
+        attackObject.SetActive(true);
+        StartCoroutine(attackCooldown());
+        canUseAbility = false;
     }
 
+    IEnumerator attackCooldown()
+    {
+        yield return new WaitForSeconds(0.5f);
+        attackObject.SetActive(false);
+        canUseAbility = true;
+    }
+
+
+    private void DoLunge(InputAction.CallbackContext obj)
+    {
+        if (!canUseAbility)
+            return;
+        lungeObject.SetActive(true);
+        StartCoroutine(lungeCooldown());
+        canUseAbility = false;
+    }
+
+    IEnumerator lungeCooldown()
+    {
+        yield return new WaitForSeconds(0.5f);
+        lungeObject.SetActive(false);
+        canUseAbility = true;
+    }
 
     #region Blocking
     IEnumerator unblockCoroutineVar;
@@ -95,13 +122,10 @@ public class PlayerInputs : MonoBehaviour
         // stops the player form using other ablities 
           isBlocking = true;
           StartCoroutine(UnblockCooldown());
-          print("inblock");
           canUseAbility = false;      
         }
         else if (isBlocking && blockCooldownFinished)
         {
-            print("unblock");
-
             currentSpeed = maxSpeed;
             // stops the player form using other ablities 
             isBlocking = false;
@@ -116,7 +140,6 @@ public class PlayerInputs : MonoBehaviour
     IEnumerator UnblockCooldown()
     {
         yield return new WaitForSeconds(exitBlockTimer);
-        print("johnblock");
         blockCooldownFinished = true;
     }
     #endregion
@@ -179,6 +202,7 @@ public class PlayerInputs : MonoBehaviour
         //the variable for the player rotation
         rb.AddForce(tempVec * currentSpeed, ForceMode.Force);
 
+        // this is weird, need the rotatetowards line for the keyboard input
         if (tempVec != Vector3.zero)
         {
             // finds the direction the player is moving

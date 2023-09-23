@@ -20593,12 +20593,6 @@ MonoBehaviour:
   audioManagerObject: {fileID: 0}
   canUseAbility: 1
   isFalling: 0
-  points: 0
-  hitByEnemy: 0
-  hitByEnemyBool: 0
-  hitByEnemyTimer: 0
-  hitByEnemyTimerMax: 0
-  assignedScoreboard: {fileID: 0}
   speed: 10
   baseSpeed: 10
   dodgeMultiplier: 14
@@ -20879,7 +20873,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4213098737812302480}
   - component: {fileID: 4213098737812302494}
-  - component: {fileID: 2242769188200794291}
   m_Layer: 0
   m_Name: Attack Hitbox
   m_TagString: Untagged
@@ -20914,28 +20907,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 6.282518, y: 4.609283, z: 4.3662925}
   m_Center: {x: 0.24562809, y: 1.8046421, z: 0.8435906}
---- !u!114 &2242769188200794291
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4213098737812302481}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6f2ba8ecaf193a041afadf5330f1ea55, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyPlayer: {fileID: 0}
-  penguinPlayer: {fileID: 4213098737512468994}
-  attackMultiplier: 10
-  blockDeflectMultiplier: 10
-  attackParticle: {fileID: 0}
-  attackParticleSystem: {fileID: 0}
-  audioManagerObject: {fileID: 0}
-  timerBool: 0
-  timer: 0
-  timerMax: 0
 --- !u!1 &4213098737907298236
 GameObject:
   m_ObjectHideFlags: 0
