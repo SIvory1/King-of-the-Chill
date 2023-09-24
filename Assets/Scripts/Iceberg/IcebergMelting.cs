@@ -2,62 +2,46 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-public class IcebergMelting : MonoBehaviour //Network Behaviour
+public class IcebergMelting : MonoBehaviour
 {
-    public GameObject playerObject;
-
     public List<GameObject> icebergSections = new List<GameObject>();
 
-    public Vector3 targetPos;
+    public List<GameObject> crackGif = new List<GameObject>();
 
     public float meltTimer;
+    public float crackTimer;
 
-    public GameObject audioManagerObject;
     AudioManager audioManager;
 
-    public bool willSectionBreak;
-    public bool doubleSectionBreak;
-    public bool noSectionBreak;
-
-   /* public override void OnStartAuthority()
+    public void Start()
     {
-        base.OnStartAuthority();
         StartCoroutine(IcebergMeltEnum());
 
-        // gets the gameobject wiothout attachign it in the inspector
-        // cause it keeps undeclaring itself for some reason
-        audioManagerObject = GameObject.Find("Audio Manager");
-        audioManager = audioManagerObject.GetComponent<AudioManager>();
-    }*/
+        audioManager = GameObject.Find("Audio Manager").GetComponent<AudioManager>();
+    }
 
 
     private IEnumerator IcebergMeltEnum()
     {
-       WaitForSeconds wait = new WaitForSeconds(meltTimer);
+        while (icebergSections.Count > 0)
+        {
+           // Debug.Log(icebergSections.Count);
+            yield return new WaitForSeconds(crackTimer);
 
-            while (true)
-            {
-            yield return wait;
-
-            if (icebergSections.Capacity <= 0)
-                yield return wait;
-
-            //plays iceberg crack noise
+            // Play SFX
             audioManager.IceCrack();
 
-            // gets a section of the iceberg randomly
-            GameObject choosenIcebergSection = icebergSections[Random.Range(0, icebergSections.Capacity)];
-            // moves chunk for client view
-            choosenIcebergSection.transform.position = targetPos;
-            yield return new WaitForSeconds(1f);
-            // removes it from scene
-            Destroy(choosenIcebergSection);
-            // removes gameobject from the list
-            icebergSections.Remove(choosenIcebergSection);
-            // removes empty element from list
-            if (icebergSections.Capacity > 0)
-                icebergSections.Capacity -= 1;
-            }
+            // Get Section
+            GameObject icebergSection = icebergSections[Random.Range(0, icebergSections.Count-1)];
+
+            // Activate Break Animation
+            icebergSection.transform.GetChild(0).gameObject.SetActive(true);
+
+            // Remove from list
+            icebergSections.Remove(icebergSection);
+
+            // Destroy Iceberg After Time
+            Destroy(icebergSection, meltTimer);
+        }
     }
 }
