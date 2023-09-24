@@ -11,61 +11,37 @@ public class LocalMelting : MonoBehaviour
     public float meltTimer;
     public float crackTimer;
 
-
-    public GameObject audioManagerObject;
     AudioManager audioManager;
 
     public void Start()
     {
-        
         StartCoroutine(IcebergMeltEnum());
 
-        // gets the gameobject wiothout attachign it in the inspector
-        // cause it keeps undeclaring itself for some reason
-        audioManagerObject = GameObject.Find("Audio Manager");
-        audioManager = audioManagerObject.GetComponent<AudioManager>();
+        audioManager = GameObject.Find("Audio Manager").GetComponent<AudioManager>();
     }
 
 
     private IEnumerator IcebergMeltEnum()
     {
-       WaitForSeconds wait = new WaitForSeconds(crackTimer);
-
-        while (true)
+        while (icebergSections.Count > 0)
         {
-            yield return wait;
+            Debug.Log(icebergSections.Count);
+            yield return new WaitForSeconds(crackTimer);
 
-            // sanity check to make sure it doesnt try and destory an obejct when there is none
-            if (icebergSections.Capacity <= 0)
-                yield return wait;
-
-            //plays iceberg crack noise
+            // Play SFX
             audioManager.IceCrack();
 
-            // gets a section of the iceberg randomly
-            GameObject choosenIcebergSection = icebergSections[Random.Range(0, icebergSections.Capacity)];
+            // Get Section
+            GameObject icebergSection = icebergSections[Random.Range(0, icebergSections.Count-1)];
 
-            // gets the child object of the iceberg section selected
-            choosenIcebergSection.transform.GetChild(0).gameObject.SetActive(true);
-            //calls the function that will destory the slected section
-            StartCoroutine(IcebergDestroyEnum(choosenIcebergSection));
+            // Activate Break Animation
+            icebergSection.transform.GetChild(0).gameObject.SetActive(true);
+
+            // Remove from list
+            icebergSections.Remove(icebergSection);
+
+            // Destroy Iceberg After Time
+            Destroy(icebergSection, meltTimer);
         }
     }
-
-    private IEnumerator IcebergDestroyEnum(GameObject choosenIcebergSection)
-    {
-        WaitForSeconds wait = new WaitForSeconds(meltTimer);
-
-        while (true)
-        {
-            yield return wait;
-                // removes it from scene
-                Destroy(choosenIcebergSection);
-                // removes gameobject from the list
-                icebergSections.Remove(choosenIcebergSection);
-                // removes empty element from list
-                if (icebergSections.Capacity > 0)
-                    icebergSections.Capacity -= 1;
-            }
-        }
-    }
+}
