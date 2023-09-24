@@ -19,6 +19,9 @@ public class PlayerInputs : MonoBehaviour
     [SerializeField] private float currentSpeed;
     [SerializeField] private float maxSpeed;
 
+    public int currentPoints;
+    public GameObject scoreBoardUI;
+
     //Abilities
     [Header("General Ablities")]
     bool canUseAbility;
@@ -92,9 +95,40 @@ public class PlayerInputs : MonoBehaviour
 
     private void DoPause(InputAction.CallbackContext obj)
     {
-        // GameManager.Instance.audioManager.PauseMenu();
+        GameManager.instance.uiManager.PauseGame();
     }
 
+    #region points and death
+
+    // each player is given a piece of ui when they spawn in, when they die they call a functiuon
+    // in ui manager that will update, make it so that it sends through which ui it is 
+
+    GameObject currentEnemy;
+    public void HitByEnemy(GameObject assignedEnemy)
+    {
+        // if player falls off and dies withotu beign hit they will lose a point? cap at zero
+        currentEnemy = assignedEnemy;
+        StartCoroutine(ReassignEnemy());
+    }
+
+    IEnumerator ReassignEnemy()
+    {
+        yield return new WaitForSeconds(3);
+        currentEnemy = null;
+    }
+
+    public void PlayerDeath()
+    {     
+        if (currentEnemy != null)
+        {
+            // probs clean this up cause its stupid having the player hold its own ui? maybe?
+            currentEnemy.GetComponent<PlayerInputs>().currentPoints += 1;
+            GameManager.instance.uiManager.UpdateScoreboardUI(currentEnemy.GetComponent<PlayerInputs>().scoreBoardUI, 
+            currentEnemy.GetComponent<PlayerInputs>().currentPoints);
+        }    
+    }
+
+    #endregion
 
     // all of this is used for the combat. they have funciton in the other scripts that can be repurposed.
     #region Ablities
@@ -186,18 +220,6 @@ public class PlayerInputs : MonoBehaviour
     }
     #endregion
 
-    // reusable function to reset ablitie bools, can only be used to set things true which would need to be taken into account
-    // not sure if it is actaully viable as alot of this will be done in animations
-    IEnumerator ResetAbilityCooldown(bool[] boolArray, float coolDownTimer)
-    {
-        yield return new WaitForSeconds(coolDownTimer);
-        for (int x = 0; x < boolArray.Length; x++)
-        {
-            boolArray[x] = true;
-        }
-    }
-
-
     private void DoDodge(InputAction.CallbackContext obj)
     {
         if (!canUseAbility)
@@ -226,6 +248,16 @@ public class PlayerInputs : MonoBehaviour
         isDodging = true;
     }
 
+    // reusable function to reset ablitie bools, can only be used to set things true which would need to be taken into account
+    // not sure if it is actaully viable as alot of this will be done in animations
+    IEnumerator ResetAbilityCooldown(bool[] boolArray, float coolDownTimer)
+    {
+        yield return new WaitForSeconds(coolDownTimer);
+        for (int x = 0; x < boolArray.Length; x++)
+        {
+            boolArray[x] = true;
+        }
+    }
     #endregion
 
     public void Movement()
@@ -272,6 +304,7 @@ public class PlayerInputs : MonoBehaviour
         if (enemy.GetComponent<PlayerInputs>().isBlocking)
         {
             enemy.GetComponent<PlayerInputs>().PlayerStunned();
+
             enemy.GetComponent<PlayerInputs>().StopCoroutine(unblockCoroutineVar);
             enemy.GetComponent<PlayerInputs>().currentSpeed = enemy.GetComponent<PlayerInputs>().maxSpeed;
             // stops the player form using other ablities 
