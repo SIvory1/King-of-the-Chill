@@ -25,7 +25,7 @@ public class LocalMelting : MonoBehaviour
     {
         while (icebergSections.Count > 0)
         {
-            Debug.Log(icebergSections.Count);
+           // Debug.Log(icebergSections.Count);
             yield return new WaitForSeconds(crackTimer);
 
             // Play SFX

@@ -23,10 +23,12 @@ public class PlayerInputs : MonoBehaviour
     [Header("General Ablities")]
     bool canUseAbility;
     bool isStunned;
+    bool canMove;
 
     [Header("Dodge")]
     [SerializeField] float dodgeSpeedMultiplier;
-    bool canMove;
+    bool isDodging;
+    float exitDodgeTimer = 1.5f;
 
     [Header("Attacking")]
     [SerializeField] GameObject attackObject;
@@ -50,8 +52,9 @@ public class PlayerInputs : MonoBehaviour
     private void Start()
     {
         unblockCoroutineVar = UnblockCooldown();
-        currentSpeed = maxSpeed;//
+        currentSpeed = maxSpeed;
         canUseAbility = true;
+        canMove = true;
     }
 
     //reason we do this with direct refernces to strings is so the system can tell the difference between inputsystems
@@ -108,7 +111,7 @@ public class PlayerInputs : MonoBehaviour
 
     IEnumerator stunCooldown()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(3f);
         attackObject.SetActive(false);
         isStunned = false;
         canUseAbility = true;
@@ -194,6 +197,7 @@ public class PlayerInputs : MonoBehaviour
         }
     }
 
+
     private void DoDodge(InputAction.CallbackContext obj)
     {
         if (!canUseAbility)
@@ -201,7 +205,9 @@ public class PlayerInputs : MonoBehaviour
 
         // used for locking slide in place and particle effect
         canMove = false;
-      
+
+        isDodging = true;
+
         // adds a force to the player, spped can be adjusted with dodgeMultiplier
         rb.AddForce(transform.forward * dodgeSpeedMultiplier, ForceMode.Impulse);
 
@@ -212,12 +218,12 @@ public class PlayerInputs : MonoBehaviour
     }
 
     // do this in a the aniamtion keyframes proabnly, at the end of it come out of dodge for best player expericance
-    float exitDodgeTimer = 1.5f;
     IEnumerator DodgeCooldown()
     {
         yield return new WaitForSeconds(exitDodgeTimer);
         canMove = true;
         canUseAbility = true;
+        isDodging = true;
     }
 
     #endregion
@@ -257,7 +263,7 @@ public class PlayerInputs : MonoBehaviour
         //  if (respawning == true)
         //     return;
 
-        if (!canMove)
+        if (!isDodging)
             return;
 
         if (col.gameObject.tag == "Player")
@@ -265,6 +271,7 @@ public class PlayerInputs : MonoBehaviour
    
         if (enemy.GetComponent<PlayerInputs>().isBlocking)
         {
+            enemy.GetComponent<PlayerInputs>().PlayerStunned();
             enemy.GetComponent<PlayerInputs>().StopCoroutine(unblockCoroutineVar);
             enemy.GetComponent<PlayerInputs>().currentSpeed = enemy.GetComponent<PlayerInputs>().maxSpeed;
             // stops the player form using other ablities 
@@ -273,8 +280,7 @@ public class PlayerInputs : MonoBehaviour
             enemy.GetComponent<PlayerInputs>().canUseAbility = true;
             print("contact block broken");
         }
-    }
-    
+    }   
 }
 
 
