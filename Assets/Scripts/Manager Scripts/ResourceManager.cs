@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Mirror;
+//using Mirror;
 using System.Linq;
 
 public class ResourceManager : MonoBehaviour
@@ -33,7 +33,7 @@ public class ResourceManager : MonoBehaviour
                     {
                         for (int n = 0; n < tmp.Count; n++)
                         {
-                            gameObject.GetComponent<NetworkManager>().spawnPrefabs.Add(tmp[n]);
+                            //gameObject.GetComponent<NetworkManager>().spawnPrefabs.Add(tmp[n]);
 
                             c++;
                         }

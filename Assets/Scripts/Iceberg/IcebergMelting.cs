@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Mirror;
 
-public class IcebergMelting : NetworkBehaviour
+
+public class IcebergMelting : MonoBehaviour //Network Behaviour
 {
     public GameObject playerObject;
 
@@ -20,7 +20,7 @@ public class IcebergMelting : NetworkBehaviour
     public bool doubleSectionBreak;
     public bool noSectionBreak;
 
-    public override void OnStartAuthority()
+   /* public override void OnStartAuthority()
     {
         base.OnStartAuthority();
         StartCoroutine(IcebergMeltEnum());
@@ -29,7 +29,7 @@ public class IcebergMelting : NetworkBehaviour
         // cause it keeps undeclaring itself for some reason
         audioManagerObject = GameObject.Find("Audio Manager");
         audioManager = audioManagerObject.GetComponent<AudioManager>();
-    }
+    }*/
 
 
     private IEnumerator IcebergMeltEnum()

@@ -1,10 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Mirror;
 using TMPro;
 
-public class PlayerMovementTest : NetworkBehaviour
+public class PlayerMovementTest : MonoBehaviour //>>>Monobehaviour to be replaced with networkbehaviour on photon implementation<<<
 {
 
     [Header("Default")]
@@ -90,8 +89,8 @@ public class PlayerMovementTest : NetworkBehaviour
     public void Update()
     {
 
-        if (!isLocalPlayer)
-            return;
+       /* if (!isLocalPlayer)
+            return;*/
 
         if (Time.timeScale == 0)
             return;
@@ -260,8 +259,8 @@ public class PlayerMovementTest : NetworkBehaviour
 
     public void FixedUpdate()
     {
-        if (!isLocalPlayer)
-            return;
+        /*if (!isLocalPlayer)
+            return;*/
         // calls movement function
         Movement();
     }
