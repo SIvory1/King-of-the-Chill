@@ -1,4 +1,4 @@
-// GENERATED AUTOMATICALLY FROM 'Assets/InputSystem/PlayerControls.inputactions'
+// GENERATED AUTOMATICALLY FROM 'Assets/USETHIS/PlayerControls.inputactions'
 
 using System;
 using System.Collections;
@@ -54,6 +54,14 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""name"": ""Lunge"",
                     ""type"": ""Button"",
                     ""id"": ""5270d912-bc41-4398-be30-6d7c6cbfed11"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""f49e05d8-2f24-489d-8e87-b2cd5a570e96"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -213,6 +221,28 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""action"": ""Lunge"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""44259694-d7f2-4211-bac2-6b98730da0e7"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e0264f32-0d07-44cb-96a4-de1187fb2fc3"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -226,6 +256,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_Player_Dodge = m_Player.FindAction("Dodge", throwIfNotFound: true);
         m_Player_Block = m_Player.FindAction("Block", throwIfNotFound: true);
         m_Player_Lunge = m_Player.FindAction("Lunge", throwIfNotFound: true);
+        m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -280,6 +311,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Dodge;
     private readonly InputAction m_Player_Block;
     private readonly InputAction m_Player_Lunge;
+    private readonly InputAction m_Player_Pause;
     public struct PlayerActions
     {
         private @PlayerControls m_Wrapper;
@@ -289,6 +321,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         public InputAction @Dodge => m_Wrapper.m_Player_Dodge;
         public InputAction @Block => m_Wrapper.m_Player_Block;
         public InputAction @Lunge => m_Wrapper.m_Player_Lunge;
+        public InputAction @Pause => m_Wrapper.m_Player_Pause;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -313,6 +346,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Lunge.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLunge;
                 @Lunge.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLunge;
                 @Lunge.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLunge;
+                @Pause.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
+                @Pause.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
+                @Pause.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -332,6 +368,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Lunge.started += instance.OnLunge;
                 @Lunge.performed += instance.OnLunge;
                 @Lunge.canceled += instance.OnLunge;
+                @Pause.started += instance.OnPause;
+                @Pause.performed += instance.OnPause;
+                @Pause.canceled += instance.OnPause;
             }
         }
     }
@@ -343,5 +382,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnDodge(InputAction.CallbackContext context);
         void OnBlock(InputAction.CallbackContext context);
         void OnLunge(InputAction.CallbackContext context);
+        void OnPause(InputAction.CallbackContext context);
     }
 }

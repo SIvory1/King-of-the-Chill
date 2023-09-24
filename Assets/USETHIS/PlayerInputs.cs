@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -19,11 +20,24 @@ public class PlayerInputs : MonoBehaviour
     [SerializeField] private float maxSpeed;
 
     //Abilities
+    [Header("General Ablities")]
     bool canUseAbility;
-    [SerializeField] float dodgeSpeedMultiplier;
+    bool isStunned;
 
+    [Header("Dodge")]
+    [SerializeField] float dodgeSpeedMultiplier;
+    bool canMove;
+
+    [Header("Attacking")]
     [SerializeField] GameObject attackObject;
     [SerializeField] GameObject lungeObject;
+
+    [Header("Block")]
+    GameObject enemy;
+    IEnumerator unblockCoroutineVar;
+    public bool isBlocking;
+    bool blockCooldownFinished;
+    float exitBlockTimer = 3f;
 
     private void Awake()
     {
@@ -36,7 +50,7 @@ public class PlayerInputs : MonoBehaviour
     private void Start()
     {
         unblockCoroutineVar = UnblockCooldown();
-        currentSpeed = maxSpeed;
+        currentSpeed = maxSpeed;//
         canUseAbility = true;
     }
 
@@ -48,6 +62,7 @@ public class PlayerInputs : MonoBehaviour
         player.FindAction("Block").started += DoBlock;
         player.FindAction("Lunge").started += DoLunge;
         player.FindAction("Dodge").started += DoDodge;
+        player.FindAction("Pause").started += DoPause;
         move = player.FindAction("Movement");
         player.Enable();
     }
@@ -59,6 +74,7 @@ public class PlayerInputs : MonoBehaviour
         player.FindAction("Block").started -= DoBlock;
         player.FindAction("Lunge").started -= DoLunge;
         player.FindAction("Dodge").started -= DoDodge;
+        player.FindAction("Pause").started -= DoPause;
         player.Disable();
     }
 
@@ -71,13 +87,41 @@ public class PlayerInputs : MonoBehaviour
         Movement();
     }
 
+    private void DoPause(InputAction.CallbackContext obj)
+    {
+        // GameManager.Instance.audioManager.PauseMenu();
+    }
+
+
     // all of this is used for the combat. they have funciton in the other scripts that can be repurposed.
     #region Ablities
+
+    public void PlayerStunned()
+    {
+        isStunned = true;
+        canUseAbility = false;
+        canMove = false;
+        // noise and animation
+        print("has been hit");
+        StartCoroutine(stunCooldown());
+    }
+
+    IEnumerator stunCooldown()
+    {
+        yield return new WaitForSeconds(1f);
+        attackObject.SetActive(false);
+        isStunned = false;
+        canUseAbility = true;
+        canMove = true;
+        print("done stun");
+    }
 
     // proably doint even need to have an attack script, i think we just doa spehrecast infront of the player and use that to add forces. i have 
     // this from hamster wrangler probaly wont be hto ad to set up. 
     private void DoAttack(InputAction.CallbackContext obj)
     {
+
+        // what happens if  a player is hit when they are sliding
         if (!canUseAbility)
             return;
         attackObject.SetActive(true);
@@ -109,9 +153,7 @@ public class PlayerInputs : MonoBehaviour
     }
 
     #region Blocking
-    IEnumerator unblockCoroutineVar;
-    public bool isBlocking;
-    bool blockCooldownFinished;
+
     private void DoBlock(InputAction.CallbackContext obj)
     {
         if (!isBlocking && canUseAbility)
@@ -134,7 +176,6 @@ public class PlayerInputs : MonoBehaviour
 
     // maybe do all this in the animations, want to make it so if the player blocks they are locked into the full aniamtion
     // beofre they unblock
-    float exitBlockTimer = 3f;
     IEnumerator UnblockCooldown()
     {
         yield return new WaitForSeconds(exitBlockTimer);
@@ -153,16 +194,13 @@ public class PlayerInputs : MonoBehaviour
         }
     }
 
-
-
-    bool isDodging;
     private void DoDodge(InputAction.CallbackContext obj)
     {
         if (!canUseAbility)
             return;
 
         // used for locking slide in place and particle effect
-        isDodging = true;
+        canMove = false;
       
         // adds a force to the player, spped can be adjusted with dodgeMultiplier
         rb.AddForce(transform.forward * dodgeSpeedMultiplier, ForceMode.Impulse);
@@ -178,7 +216,7 @@ public class PlayerInputs : MonoBehaviour
     IEnumerator DodgeCooldown()
     {
         yield return new WaitForSeconds(exitDodgeTimer);
-        isDodging = false;
+        canMove = true;
         canUseAbility = true;
     }
 
@@ -188,7 +226,7 @@ public class PlayerInputs : MonoBehaviour
     {
         if (Time.timeScale == 0)
             return;
-           if (isDodging)
+           if (!canMove)
                return;
 
         //player movement, can only use vector2 for controller so we use a vector3
@@ -211,15 +249,15 @@ public class PlayerInputs : MonoBehaviour
             rb.MoveRotation(targetRotation);
         }
     }
+
     // when a player dashes at someone when they are blocking it breaks them out of the dodge.
-    GameObject enemy;
     public void OnCollisionEnter(Collision col)
     {
         // for player respawning
         //  if (respawning == true)
         //     return;
 
-        if (!isDodging)
+        if (!canMove)
             return;
 
         if (col.gameObject.tag == "Player")
