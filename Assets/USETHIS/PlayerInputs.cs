@@ -301,7 +301,7 @@ public class PlayerInputs : MonoBehaviour
         if (col.gameObject.tag == "Player")
             enemy = col.gameObject;
    
-        if (enemy.GetComponent<PlayerInputs>().isBlocking)
+        if (col.gameObject.tag == "Player" && col.gameObject.GetComponent<PlayerInputs>().isBlocking)
         {
             enemy.GetComponent<PlayerInputs>().PlayerStunned();
 
