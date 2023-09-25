@@ -21,7 +21,7 @@ public class PlayerAttack : MonoBehaviour
             if (col.gameObject.GetComponent<PlayerInputs>().isBlocking == false)
             {
                 col.GetComponent<Rigidbody>().AddForce(transform.forward * attackForceMultiplier, ForceMode.Impulse);
-                col.GetComponent<PlayerInputs>().PlayerStunned();
+              //  col.GetComponent<PlayerInputs>().PlayerStunned();
                 // call a fucntion in playe
             }
             else if (col.gameObject.GetComponent<PlayerInputs>().isBlocking)

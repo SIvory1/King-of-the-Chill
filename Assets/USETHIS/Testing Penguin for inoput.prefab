@@ -60,6 +60,7 @@ MonoBehaviour:
   maxSpeed: 15
   currentPoints: 0
   scoreBoardUI: {fileID: 0}
+  animator: {fileID: 3227057406862642692}
   dodgeSpeedMultiplier: 7.64
   attackObject: {fileID: 3227057406600443550}
   lungeObject: {fileID: 3227057407546935874}
@@ -233,6 +234,11 @@ PrefabInstance:
 --- !u!1 &3227057406862642701 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4213098737512468994, guid: 7446031cc3a1cde479341c6e8adbdd18, type: 3}
+  m_PrefabInstance: {fileID: 1639065519690914831}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &3227057406862642692 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 4213098737512469003, guid: 7446031cc3a1cde479341c6e8adbdd18, type: 3}
   m_PrefabInstance: {fileID: 1639065519690914831}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &3227057406600443550 stripped

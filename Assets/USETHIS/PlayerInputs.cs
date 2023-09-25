@@ -22,6 +22,8 @@ public class PlayerInputs : MonoBehaviour
     public int currentPoints;
     public GameObject scoreBoardUI;
 
+   [SerializeField] Animator animator;
+
     //Abilities
     [Header("General Ablities")]
     bool canUseAbility;
@@ -163,12 +165,13 @@ public class PlayerInputs : MonoBehaviour
             return;
         attackObject.SetActive(true);
         StartCoroutine(attackCooldown());
+        animator.SetTrigger("Attack");
         canUseAbility = false;
     }
 
     IEnumerator attackCooldown()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(2f);
         attackObject.SetActive(false);
         canUseAbility = true;
     }
@@ -229,6 +232,7 @@ public class PlayerInputs : MonoBehaviour
         canMove = false;
 
         isDodging = true;
+        animator.SetTrigger("Slide");
 
         // adds a force to the player, spped can be adjusted with dodgeMultiplier
         rb.AddForce(transform.forward * dodgeSpeedMultiplier, ForceMode.Impulse);
@@ -279,6 +283,7 @@ public class PlayerInputs : MonoBehaviour
         // this is weird, need the rotatetowards line for the keyboard input
         if (tempVec != Vector3.zero)
         {
+            animator.SetFloat("Walk", Mathf.Abs(rb.velocity.magnitude));
             // finds the direction the player is moving
             Quaternion targetRotation = Quaternion.LookRotation(tempVec);
             // rotates players towards the way they are facing
@@ -315,6 +320,3 @@ public class PlayerInputs : MonoBehaviour
         }
     }   
 }
-
-
-
