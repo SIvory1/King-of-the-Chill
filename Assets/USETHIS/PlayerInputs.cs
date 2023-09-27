@@ -44,7 +44,11 @@ public class PlayerInputs : MonoBehaviour
     IEnumerator unblockCoroutineVar;
     public bool isBlocking;
     bool blockCooldownFinished;
-    float exitBlockTimer = 3f;
+    [SerializeField] float blockCooldownTimer;
+
+    [Header("Lunge")]
+    [SerializeField] float lungeForceMultiplier;
+    [SerializeField] float lungeReducedSpeed;
 
     private void Awake()
     {
@@ -133,7 +137,14 @@ public class PlayerInputs : MonoBehaviour
     #endregion
 
     // all of this is used for the combat. they have funciton in the other scripts that can be repurposed.
+
+    // since i done a bunch of this through keyframes, what happens if they are hit mid aniamtion?
+    // do they just not meet those coniditon now? might have to do a big thing that turns off like 
+    //everything when they are hit just incase
     #region Ablities
+
+    // slow down stun and end it through keyframes
+    #region Stun/Taken Dmg
 
     public void PlayerStunned()
     {
@@ -141,57 +152,88 @@ public class PlayerInputs : MonoBehaviour
         canUseAbility = false;
         canMove = false;
         // noise and animation
+        animator.SetTrigger("Stun");
         print("has been hit");
         StartCoroutine(stunCooldown());
     }
 
+    public void PlayerTakenDmg()
+    {
+        animator.SetTrigger("Take Damage");
+    }
+
     IEnumerator stunCooldown()
     {
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(2f);
         attackObject.SetActive(false);
         isStunned = false;
         canUseAbility = true;
         canMove = true;
         print("done stun");
     }
+    #endregion
 
-    // proably doint even need to have an attack script, i think we just doa spehrecast infront of the player and use that to add forces. i have 
-    // this from hamster wrangler probaly wont be hto ad to set up. 
+    #region Basic Attack
+
     private void DoAttack(InputAction.CallbackContext obj)
     {
-
         // what happens if  a player is hit when they are sliding
         if (!canUseAbility)
             return;
-        attackObject.SetActive(true);
-        StartCoroutine(attackCooldown());
         animator.SetTrigger("Attack");
         canUseAbility = false;
     }
 
-    IEnumerator attackCooldown()
+    //called in the aniamtion using keyframes
+
+    public void StartAttackKeyframe()
     {
-        yield return new WaitForSeconds(2f);
+        attackObject.SetActive(true);
+    }
+
+    public void EndAttackKeyframe()
+    {
         attackObject.SetActive(false);
         canUseAbility = true;
     }
 
+    #endregion
+
+    #region Lunge
+    // the lunge is to seperate amiamtions, we first use charge and then at the end of 
+    // the charge a keyframe calls the start lunge which also has keyframes 
     private void DoLunge(InputAction.CallbackContext obj)
     {
         if (!canUseAbility)
             return;
-        lungeObject.SetActive(true);
-        StartCoroutine(lungeCooldown());
+        animator.SetTrigger("Charge");
+        currentSpeed = lungeReducedSpeed;
         canUseAbility = false;
     }
 
-    IEnumerator lungeCooldown()
+    // instead of doing a hitbox should it just be a raycast so that you cant swing it sideways and hit a 
+    //player
+
+    // this looks bad rn find a way to fix the animation tree as it onyl works if it comes from any state
+    // needs to look like one long animation
+
+    public void StartLungeKeyframe()
     {
-        yield return new WaitForSeconds(0.5f);
-        lungeObject.SetActive(false);
-        canUseAbility = true;
+        animator.SetTrigger("Lunge");
+        rb.AddForce(transform.forward * lungeForceMultiplier, ForceMode.Impulse);
+        lungeObject.SetActive(true);         
     }
 
+    public void EndLungeKeyframe()
+    {
+        lungeObject.SetActive(false);
+        currentSpeed = maxSpeed;
+        canUseAbility = true;
+        print("john");
+    }
+    #endregion
+
+    // block is buggy 
     #region Blocking
 
     private void DoBlock(InputAction.CallbackContext obj)
@@ -202,27 +244,42 @@ public class PlayerInputs : MonoBehaviour
         // stops the player form using other ablities 
           isBlocking = true;
           StartCoroutine(UnblockCooldown());
+          animator.SetTrigger("Block");
           canUseAbility = false;      
         }
         else if (isBlocking && blockCooldownFinished)
         {
-            currentSpeed = maxSpeed;
-            // stops the player form using other ablities 
-            isBlocking = false;
-            blockCooldownFinished = false;
-            canUseAbility = true;
+            BlockCanceled(this.gameObject);
         }    
     }
+    // *UFP stands for unidentified flying penguin as it can be either the player or the enemy
+    void BlockCanceled(GameObject UFP)
+    {
+        UFP.GetComponent<PlayerInputs>().currentSpeed = UFP.GetComponent<PlayerInputs>().maxSpeed;
+        // stops the player form using other ablities 
+        UFP.GetComponent<PlayerInputs>().isBlocking = false;
+        UFP.GetComponent<PlayerInputs>().blockCooldownFinished = false;
+        UFP.GetComponent<PlayerInputs>().canUseAbility = true;
 
-    // maybe do all this in the animations, want to make it so if the player blocks they are locked into the full aniamtion
-    // beofre they unblock
+        // block is one long animation we freeze it half way to pretned its a block
+        UFP.GetComponent<PlayerInputs>().animator.speed = 1f;
+    }
+
+    // stops them from instanly leaving block
     IEnumerator UnblockCooldown()
     {
-        yield return new WaitForSeconds(exitBlockTimer);
+        yield return new WaitForSeconds(blockCooldownTimer);
         blockCooldownFinished = true;
+    }
+
+    public void BlockKeyframeStopAni()
+    {
+        animator.speed = 0f;
     }
     #endregion
 
+    // do dodge with keyframes
+    #region Dodge
     private void DoDodge(InputAction.CallbackContext obj)
     {
         if (!canUseAbility)
@@ -251,6 +308,8 @@ public class PlayerInputs : MonoBehaviour
         canUseAbility = true;
         isDodging = true;
     }
+
+    #endregion
 
     // reusable function to reset ablitie bools, can only be used to set things true which would need to be taken into account
     // not sure if it is actaully viable as alot of this will be done in animations
@@ -306,17 +365,12 @@ public class PlayerInputs : MonoBehaviour
         if (col.gameObject.tag == "Player")
             enemy = col.gameObject;
    
+        
         if (col.gameObject.tag == "Player" && col.gameObject.GetComponent<PlayerInputs>().isBlocking)
         {
             enemy.GetComponent<PlayerInputs>().PlayerStunned();
-
             enemy.GetComponent<PlayerInputs>().StopCoroutine(unblockCoroutineVar);
-            enemy.GetComponent<PlayerInputs>().currentSpeed = enemy.GetComponent<PlayerInputs>().maxSpeed;
-            // stops the player form using other ablities 
-            enemy.GetComponent<PlayerInputs>().isBlocking = false;
-            enemy.GetComponent<PlayerInputs>().blockCooldownFinished = false;
-            enemy.GetComponent<PlayerInputs>().canUseAbility = true;
-            print("contact block broken");
+            BlockCanceled(enemy);
         }
     }   
 }

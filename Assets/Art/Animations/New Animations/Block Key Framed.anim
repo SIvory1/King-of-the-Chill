@@ -18660,9 +18660,9 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 0.41666666
-    functionName: HoldBlock
+    functionName: BlockKeyframeStopAni
     data: 
-    objectReferenceParameter: {fileID: 11500000, guid: f9f4e6d2cccf1444fb95bf4ef689c1ac, type: 3}
+    objectReferenceParameter: {fileID: 11500000, guid: 84ff21f67d9a60a41ba0037ce23f9690, type: 3}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0

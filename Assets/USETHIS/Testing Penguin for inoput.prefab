@@ -58,13 +58,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentSpeed: 0
   maxSpeed: 15
-  currentPoints: 0
+  currentPoints: 5
   scoreBoardUI: {fileID: 0}
   animator: {fileID: 3227057406862642692}
   dodgeSpeedMultiplier: 7.64
   attackObject: {fileID: 3227057406600443550}
   lungeObject: {fileID: 3227057407546935874}
   isBlocking: 0
+  lungeForceMultiplier: 2.5
+  lungeReducedSpeed: 5
 --- !u!114 &7376730060872222803
 MonoBehaviour:
   m_ObjectHideFlags: 0
