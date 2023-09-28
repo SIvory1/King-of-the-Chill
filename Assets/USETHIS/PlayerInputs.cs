@@ -79,7 +79,6 @@ public class PlayerInputs : MonoBehaviour
         player.Enable();
     }
 
-
     private void OnDisable()
     {
         player.FindAction("Attack").started -= DoAttack;
