@@ -11,25 +11,14 @@ public class KillBox : MonoBehaviour
  
 
     public void OnCollisionEnter(Collision col)
-     {
-        if (col.gameObject.name == "Penguin Blue")
+    {
+        if (col.gameObject.CompareTag("Player"))
         {
-            col.gameObject.GetComponent<PlayerMove1>().Respawn();
-            col.gameObject.GetComponent<PlayerMove1>().isFalling = true;
+             col.gameObject.GetComponent<PlayerInputs>().Respawn();
+           //  col.gameObject.GetComponent<PlayerInputs>().isFalling = true;
 
             col.gameObject.transform.position = spawnPoint.position;
             audioManager.PlayerFall();
-
-        }
-
-        if (col.gameObject.name == "Penguin Red")
-        {
-            col.gameObject.GetComponent<PlayerMove2>().Respawn();
-            col.gameObject.GetComponent<PlayerMove2>().isFalling = true;
-
-            col.gameObject.transform.position = spawnPoint.position;
-            audioManager.PlayerFall();
-
         }
     }
 }

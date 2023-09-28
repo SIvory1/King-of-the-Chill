@@ -27,13 +27,12 @@ public class PlayerInputs : MonoBehaviour
     //Abilities
     [Header("General Ablities")]
     bool canUseAbility;
-    bool isStunned;
     bool canMove;
+    bool isStunned;
 
     [Header("Dodge")]
     [SerializeField] float dodgeSpeedMultiplier;
     bool isDodging;
-    float exitDodgeTimer = 1.5f;
 
     [Header("Attacking")]
     [SerializeField] GameObject attackObject;
@@ -63,6 +62,7 @@ public class PlayerInputs : MonoBehaviour
         unblockCoroutineVar = UnblockCooldown();
         currentSpeed = maxSpeed;
         canUseAbility = true;
+        blockCooldownFinished = false;
         canMove = true;
     }
 
@@ -134,16 +134,29 @@ public class PlayerInputs : MonoBehaviour
         }    
     }
 
+    // fall animation is so fucking bad bro omg why does it make you go in the air fucking prober bro
+    public bool canBeHit;
+    public void Respawn()
+    {
+        animator.SetTrigger("Fall");
+        canBeHit = false;
+        canUseAbility = false;
+        StartCoroutine("RemoveIFrames");
+    }
+
+    IEnumerator RemoveIFrames()
+    {
+        yield return new WaitForSeconds(2f);
+        canBeHit = true;
+        canUseAbility = true;
+    }
+
     #endregion
 
-    // all of this is used for the combat. they have funciton in the other scripts that can be repurposed.
 
-    // since i done a bunch of this through keyframes, what happens if they are hit mid aniamtion?
-    // do they just not meet those coniditon now? might have to do a big thing that turns off like 
-    //everything when they are hit just incase
     #region Ablities
 
-    // slow down stun and end it through keyframes
+    // slow down stun anim and end it through keyframes
     #region Stun/Taken Dmg
 
     public void PlayerStunned()
@@ -153,13 +166,25 @@ public class PlayerInputs : MonoBehaviour
         canMove = false;
         // noise and animation
         animator.SetTrigger("Stun");
-        print("has been hit");
         StartCoroutine(stunCooldown());
     }
 
+    // makes sure every bool is set back to normal, because we do thing y keyframe, if they are
+    // take dmage mid anim then it wont reach the keyframe, this makes sure that no weird
+    // issue occur because of that 
     public void PlayerTakenDmg()
     {
         animator.SetTrigger("Take Damage");
+
+        isStunned = false;
+        canUseAbility = true;
+        canMove = true;
+
+        isBlocking = false;
+        blockCooldownFinished = false;
+
+        currentSpeed = maxSpeed;
+        isDodging = false;
     }
 
     IEnumerator stunCooldown()
@@ -233,7 +258,6 @@ public class PlayerInputs : MonoBehaviour
     }
     #endregion
 
-    // block is buggy 
     #region Blocking
 
     private void DoBlock(InputAction.CallbackContext obj)
@@ -241,20 +265,32 @@ public class PlayerInputs : MonoBehaviour
         if (!isBlocking && canUseAbility)
         {
           currentSpeed = 0f;
-        // stops the player form using other ablities 
-          isBlocking = true;
-          StartCoroutine(UnblockCooldown());
+
+        //  StartCoroutine(UnblockCooldown());
           animator.SetTrigger("Block");
-          canUseAbility = false;      
+          canUseAbility = false;
+           print("block started");
         }
-        else if (isBlocking && blockCooldownFinished)
+        else if (isBlocking) //&& blockCooldownFinished)
         {
-            BlockCanceled(this.gameObject);
+           currentSpeed = maxSpeed;
+            // stops the player form using other ablities 
+            isBlocking = false;
+            blockCooldownFinished = false;
+           canUseAbility = true;
+
+            print("block canceled");
+
+            // block is one long animation we freeze it half way to pretned its a block
+            animator.speed = 1f;
+           // BlockCanceled(this.gameObject);
         }    
     }
     // *UFP stands for unidentified flying penguin as it can be either the player or the enemy
     void BlockCanceled(GameObject UFP)
     {
+        print("block canceled");
+
         UFP.GetComponent<PlayerInputs>().currentSpeed = UFP.GetComponent<PlayerInputs>().maxSpeed;
         // stops the player form using other ablities 
         UFP.GetComponent<PlayerInputs>().isBlocking = false;
@@ -265,20 +301,25 @@ public class PlayerInputs : MonoBehaviour
         UFP.GetComponent<PlayerInputs>().animator.speed = 1f;
     }
 
+
+
+
     // stops them from instanly leaving block
     IEnumerator UnblockCooldown()
     {
         yield return new WaitForSeconds(blockCooldownTimer);
         blockCooldownFinished = true;
+        print("block middle");
     }
 
     public void BlockKeyframeStopAni()
     {
+        // stops the player form using other ablities 
+        isBlocking = true;
         animator.speed = 0f;
     }
     #endregion
 
-    // do dodge with keyframes
     #region Dodge
     private void DoDodge(InputAction.CallbackContext obj)
     {
@@ -294,33 +335,18 @@ public class PlayerInputs : MonoBehaviour
         // adds a force to the player, spped can be adjusted with dodgeMultiplier
         rb.AddForce(transform.forward * dodgeSpeedMultiplier, ForceMode.Impulse);
 
-        StartCoroutine(DodgeCooldown());
         // makes it so player cnat use any other ability mid use
         canUseAbility = false;
-
     }
 
-    // do this in a the aniamtion keyframes proabnly, at the end of it come out of dodge for best player expericance
-    IEnumerator DodgeCooldown()
+    public void EndDodgeKeyframe()
     {
-        yield return new WaitForSeconds(exitDodgeTimer);
         canMove = true;
         canUseAbility = true;
-        isDodging = true;
+        isDodging = false;
     }
-
     #endregion
 
-    // reusable function to reset ablitie bools, can only be used to set things true which would need to be taken into account
-    // not sure if it is actaully viable as alot of this will be done in animations
-    IEnumerator ResetAbilityCooldown(bool[] boolArray, float coolDownTimer)
-    {
-        yield return new WaitForSeconds(coolDownTimer);
-        for (int x = 0; x < boolArray.Length; x++)
-        {
-            boolArray[x] = true;
-        }
-    }
     #endregion
 
     public void Movement()
@@ -365,7 +391,6 @@ public class PlayerInputs : MonoBehaviour
         if (col.gameObject.tag == "Player")
             enemy = col.gameObject;
    
-        
         if (col.gameObject.tag == "Player" && col.gameObject.GetComponent<PlayerInputs>().isBlocking)
         {
             enemy.GetComponent<PlayerInputs>().PlayerStunned();

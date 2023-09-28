@@ -15,8 +15,11 @@ public class PlayerAttack : MonoBehaviour
     private void OnTriggerEnter(Collider col)
     {
         // if player htis penguin they go back 
-        if (col.gameObject.tag == "Player") //&& col.GetComponent<PlayerMove2>().iFrames == false)
+        if (col.gameObject.CompareTag("Player")) //&& col.GetComponent<PlayerMove2>().iFrames == false)
         {
+            if(!col.gameObject.GetComponent<PlayerInputs>().canBeHit)
+                 return;
+
             // checks if they are blocking
             if (col.gameObject.GetComponent<PlayerInputs>().isBlocking == false)
             {
