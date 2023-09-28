@@ -50,16 +50,12 @@ public class Manager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //Freezes all actions until gameplay is started
-        Time.timeScale = 0;
         //Allows us to call any audio clip from the audio manager script
         audioManager = audioManagerObject.GetComponent<AudioManager>();
     }
 
     public void Update()
     {
-
-
         if (roundStarted == true)
         {
            roundTimer -= Time.deltaTime;
