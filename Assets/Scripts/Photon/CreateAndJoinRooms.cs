@@ -12,7 +12,7 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
     {
         string newRoomCode = CreateRoomCode(6);
         // TODO: Validate Room does not exist
-        PhotonNetwork.CreateRoom("123");
+        PhotonNetwork.CreateRoom(newRoomCode);
     }
 
     private static Random random = new Random();
