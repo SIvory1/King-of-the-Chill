@@ -10,7 +10,9 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
 
     public void CreateRoom()
     {
-        PhotonNetwork.CreateRoom(CreateRoomCode(6));
+        string newRoomCode = CreateRoomCode(6);
+        // TODO: Validate Room does not exist
+        PhotonNetwork.CreateRoom("123");
     }
 
     private static Random random = new Random();
@@ -22,13 +24,9 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
     }
     public void JoinRoom()
     {
-        PhotonNetwork.JoinRoom(joinInput.text);
+        // Adds in a random invisible letter at the end of the text???? I love me some zero width non printing characters !! :)
+        PhotonNetwork.JoinRoom(joinInput.text.Remove(joinInput.text.Length - 1));
     }
-
-    public override void OnJoinedRoom()
-    {
-    }
-
     public void BackToTitleScreen()
     {
         PhotonNetwork.LeaveLobby();
