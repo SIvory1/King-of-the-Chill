@@ -62,6 +62,7 @@ public class PlayerInputs : MonoBehaviour
         unblockCoroutineVar = UnblockCooldown();
         currentSpeed = maxSpeed;
         canUseAbility = true;
+        canBeHit = true;
         blockCooldownFinished = false;
         canMove = true;
     }

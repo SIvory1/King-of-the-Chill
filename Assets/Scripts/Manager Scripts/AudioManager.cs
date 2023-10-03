@@ -29,6 +29,47 @@ public class AudioManager : MonoBehaviour
     public AudioSource music;
     public AudioSource menuNoise;
 
+    public GameObject audioObject;
+
+    /*
+    [Header("Player Noises")]
+    [SerializeField] private AudioClip playerHit;
+    [SerializeField] private AudioClip playerAttack;
+    [SerializeField] private AudioClip playerBlock;
+    [SerializeField] private AudioClip playerFall;
+    [SerializeField] private AudioClip playerSlide;
+    [SerializeField] private AudioClip playerStunned;
+    [SerializeField] private AudioClip playerStunHit;
+    [SerializeField] private AudioClip playerLunge;
+
+
+    [Header("Non-player noises")]
+    [SerializeField] private AudioClip iceCrack;
+    [SerializeField] private AudioClip ambientOcean;
+    [SerializeField] private AudioClip waterSplash;
+    [SerializeField] private AudioClip countDown;
+    [SerializeField] private AudioClip victory;
+    [SerializeField] private AudioClip music;
+    [SerializeField] private AudioClip menuNoise;
+    */
+
+     private void PlaySound(AudioClip audioClip)
+    {
+        GameObject audio = Instantiate(audioObject, Vector3.zero, Quaternion.identity);
+        audio.GetComponent<AudioSource>().PlayOneShot(audioClip);
+        StartCoroutine(DeleteAudioObject(audio));
+    }
+
+    IEnumerator DeleteAudioObject(GameObject audio)
+    {
+        yield return new WaitForSeconds(10);
+        Destroy(audio);
+    }
+
+    public void PlayerHitAudio()
+    {
+    //    PlaySound(playerHit);
+    }
 
     public void InteractSound()
     {
