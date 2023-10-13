@@ -49,6 +49,10 @@ public class PlayerInputs : MonoBehaviour
     [SerializeField] float lungeForceMultiplier;
     [SerializeField] float lungeReducedSpeed;
 
+    [Header("Particle Effects")]
+    [SerializeField] ParticleSystem stunEffect;
+    [SerializeField] ParticleSystem slideEffect;
+
     private void Awake()
     {
         rb = this.GetComponent<Rigidbody>();

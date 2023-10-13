@@ -24,7 +24,7 @@ public class Attack : MonoBehaviour
     {
         enemyPlayer = col.gameObject;
 
-        if (col.gameObject.tag == "Player" && enemyPlayer.GetComponent<PlayerMovementTest>().canBeHit == true && enemyPlayer.GetComponent<PlayerMovementTest>().iFrames == false)
+        if (col.gameObject.CompareTag("Player") && enemyPlayer.GetComponent<PlayerMovementTest>().canBeHit == true && enemyPlayer.GetComponent<PlayerMovementTest>().iFrames == false)
         {
             enemyPlayer.GetComponent<PlayerMovementTest>().hitByEnemy = 1;
             audioManager.PlayerHit();
@@ -33,7 +33,7 @@ public class Attack : MonoBehaviour
         }
 
         // if player hits someone who is blocking and they are attacking htey will be pushed backwards 
-        if (col.gameObject.tag == "Player" && enemyPlayer.GetComponent<PlayerMovementTest>().canBeHit == false && enemyPlayer.GetComponent<PlayerMovementTest>().iFrames == false)
+        if (col.gameObject.CompareTag("Player") && enemyPlayer.GetComponent<PlayerMovementTest>().canBeHit == false && enemyPlayer.GetComponent<PlayerMovementTest>().iFrames == false)
         {    
             penguinPlayer.GetComponent<Rigidbody>().AddForce(transform.forward * blockDeflectMultiplier * -1, ForceMode.Impulse);
         }

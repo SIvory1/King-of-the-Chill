@@ -1,19 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &2737467198355989128
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3227057406600443550}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4601daa967f59ce4cb6d543e702a7f51, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  attackForceMultiplier: 3.6
-  deflectedForceMultiplier: 3.6
 --- !u!114 &1061280687
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65,8 +51,27 @@ MonoBehaviour:
   attackObject: {fileID: 3227057406600443550}
   lungeObject: {fileID: 3227057407546935874}
   isBlocking: 0
+  blockCooldownTimer: 0
   lungeForceMultiplier: 2.5
   lungeReducedSpeed: 5
+  stunEffect: {fileID: 3227057406382025803}
+  slideEffect: {fileID: 3227057408023434112}
+  canBeHit: 0
+--- !u!114 &2737467198355989128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3227057406600443550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4601daa967f59ce4cb6d543e702a7f51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackForceMultiplier: 3.6
+  deflectedForceMultiplier: 3.6
+  attackEffect: {fileID: 6762029504159529235}
 --- !u!114 &7376730060872222803
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -81,6 +86,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackForceMultiplier: 9.5
   deflectedForceMultiplier: 9.36
+  attackEffect: {fileID: 6762029504159529235}
 --- !u!1001 &1639065519690914831
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -104,6 +110,14 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 3b258c429953495479d4f319258cf141, type: 2}
+    - target: {fileID: 4213098736550875009, guid: 7446031cc3a1cde479341c6e8adbdd18, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4213098736550875023, guid: 7446031cc3a1cde479341c6e8adbdd18, type: 3}
+      propertyPath: looping
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4213098737131869770, guid: 7446031cc3a1cde479341c6e8adbdd18, type: 3}
       propertyPath: m_LocalPosition.x
       value: -492
@@ -138,7 +152,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4213098737512468994, guid: 7446031cc3a1cde479341c6e8adbdd18, type: 3}
       propertyPath: m_Name
-      value: Testing Penguin for inoput
+      value: PlayerPrefab
       objectReference: {fileID: 0}
     - target: {fileID: 4213098737512468994, guid: 7446031cc3a1cde479341c6e8adbdd18, type: 3}
       propertyPath: m_IsActive
@@ -224,8 +238,36 @@ PrefabInstance:
       propertyPath: m_Center.z
       value: 6.744035
       objectReference: {fileID: 0}
+    - target: {fileID: 4213098738131218500, guid: 7446031cc3a1cde479341c6e8adbdd18, type: 3}
+      propertyPath: looping
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4213098738131218503, guid: 7446031cc3a1cde479341c6e8adbdd18, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5433785803797374236, guid: 7446031cc3a1cde479341c6e8adbdd18, type: 3}
       propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5790349552422843631, guid: 7446031cc3a1cde479341c6e8adbdd18, type: 3}
+      propertyPath: looping
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6590739811110625163, guid: 7446031cc3a1cde479341c6e8adbdd18, type: 3}
+      propertyPath: m_BoundingSphereOverride.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6590739811110625163, guid: 7446031cc3a1cde479341c6e8adbdd18, type: 3}
+      propertyPath: m_BoundingSphereOverride.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6590739811110625163, guid: 7446031cc3a1cde479341c6e8adbdd18, type: 3}
+      propertyPath: m_BoundingSphereOverride.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6590739811110625163, guid: 7446031cc3a1cde479341c6e8adbdd18, type: 3}
+      propertyPath: m_BoundingSphereOverride.z
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
@@ -261,5 +303,15 @@ ParticleSystem:
 --- !u!1 &3227057407546935874 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4213098737131869773, guid: 7446031cc3a1cde479341c6e8adbdd18, type: 3}
+  m_PrefabInstance: {fileID: 1639065519690914831}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &3227057408023434112 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 4213098736550875023, guid: 7446031cc3a1cde479341c6e8adbdd18, type: 3}
+  m_PrefabInstance: {fileID: 1639065519690914831}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &3227057406382025803 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 4213098738131218500, guid: 7446031cc3a1cde479341c6e8adbdd18, type: 3}
   m_PrefabInstance: {fileID: 1639065519690914831}
   m_PrefabAsset: {fileID: 0}
