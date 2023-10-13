@@ -30,7 +30,7 @@ Transform:
   m_LocalScale: {x: 1.8503042, y: 1.8503042, z: 1.8503042}
   m_Children: []
   m_Father: {fileID: 5177395358929969948}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!198 &1063575816598923746
 ParticleSystem:
@@ -4912,7 +4912,7 @@ Transform:
   m_LocalScale: {x: 2.845193, y: 2.845193, z: 2.845193}
   m_Children: []
   m_Father: {fileID: 5177395358929969948}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!198 &3272762661996147743
 ParticleSystem:
@@ -14637,99 +14637,6 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
---- !u!1 &3648003774153114777
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 150334019062968086}
-  - component: {fileID: 6590739811110625163}
-  m_Layer: 0
-  m_Name: Point Light
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &150334019062968086
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3648003774153114777}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.11948503, y: 0.11948503, z: 0.11948503}
-  m_Children: []
-  m_Father: {fileID: 5177395358929969948}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!108 &6590739811110625163
-Light:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3648003774153114777}
-  m_Enabled: 1
-  serializedVersion: 10
-  m_Type: 2
-  m_Shape: 0
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
-  m_Range: 10
-  m_SpotAngle: 30
-  m_InnerSpotAngle: 21.80208
-  m_CookieSize: 10
-  m_Shadows:
-    m_Type: 0
-    m_Resolution: -1
-    m_CustomResolution: -1
-    m_Strength: 1
-    m_Bias: 0.05
-    m_NormalBias: 0.4
-    m_NearPlane: 0.2
-    m_CullingMatrixOverride:
-      e00: 1
-      e01: 0
-      e02: 0
-      e03: 0
-      e10: 0
-      e11: 1
-      e12: 0
-      e13: 0
-      e20: 0
-      e21: 0
-      e22: 1
-      e23: 0
-      e30: 0
-      e31: 0
-      e32: 0
-      e33: 1
-    m_UseCullingMatrixOverride: 0
-  m_Cookie: {fileID: 0}
-  m_DrawHalo: 0
-  m_Flare: {fileID: 0}
-  m_RenderMode: 0
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_RenderingLayerMask: 1
-  m_Lightmapping: 4
-  m_LightShadowCasterMode: 0
-  m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 1
-  m_ColorTemperature: 6570
-  m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: NaN, y: 1.05e-43, z: 1.02e-43, w: 0}
-  m_UseBoundingSphereOverride: 0
-  m_UseViewFrustumForShadowCasterCull: 1
-  m_ShadowRadius: 0
-  m_ShadowAngle: 0
 --- !u!1 &4213098736103006851
 GameObject:
   m_ObjectHideFlags: 0
@@ -25899,7 +25806,7 @@ Transform:
   m_LocalScale: {x: 2.8428955, y: 2.8428955, z: 2.8428955}
   m_Children: []
   m_Father: {fileID: 5177395358929969948}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!198 &6574339071782259484
 ParticleSystem:
@@ -30772,7 +30679,6 @@ Transform:
   m_LocalScale: {x: -0.020692326, y: -0.020692326, z: -0.020692326}
   m_Children:
   - {fileID: 5614626866562741912}
-  - {fileID: 150334019062968086}
   - {fileID: 7428464625944740886}
   - {fileID: 6519232895592588911}
   - {fileID: 3527869038697789141}
@@ -34629,7 +34535,7 @@ ParticleSystem:
   LightsModule:
     enabled: 1
     ratio: 1
-    light: {fileID: 6590739811110625163}
+    light: {fileID: 0}
     randomDistribution: 1
     color: 1
     range: 1
@@ -35652,7 +35558,7 @@ Transform:
   m_LocalScale: {x: 0.30656427, y: 0.30656424, z: 0.30656424}
   m_Children: []
   m_Father: {fileID: 5177395358929969948}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!198 &1113654638017270351
 ParticleSystem:
@@ -40525,7 +40431,7 @@ Transform:
   m_LocalScale: {x: 2.1612751, y: 2.1612751, z: 2.1612751}
   m_Children: []
   m_Father: {fileID: 5177395358929969948}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!198 &5317472255693956699
 ParticleSystem:

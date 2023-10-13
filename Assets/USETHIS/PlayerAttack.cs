@@ -27,10 +27,12 @@ public class PlayerAttack : MonoBehaviour
             {
                 attackEffect.SetActive(true);
                 StartCoroutine(RemoveAttackParticle());
+
                 col.GetComponent<Rigidbody>().AddForce(transform.forward * attackForceMultiplier, ForceMode.Impulse);
                 col.GetComponent<PlayerInputs>().PlayerTakenDmg();
 
             }
+            // if you lunge attack they continue to stun but also lunge fix that 
             else if (col.gameObject.GetComponent<PlayerInputs>().isBlocking)
             {
                 player.GetComponent<Rigidbody>().AddForce(-transform.forward * deflectedForceMultiplier, ForceMode.Impulse);

@@ -50,8 +50,8 @@ public class PlayerInputs : MonoBehaviour
     [SerializeField] float lungeReducedSpeed;
 
     [Header("Particle Effects")]
-    [SerializeField] ParticleSystem stunEffect;
-    [SerializeField] ParticleSystem slideEffect;
+    [SerializeField] GameObject stunEffect;
+    [SerializeField] GameObject slideEffect;
 
     private void Awake()
     {
@@ -170,6 +170,9 @@ public class PlayerInputs : MonoBehaviour
         canMove = false;
         // noise and animation
         animator.SetTrigger("Stun");
+
+        stunEffect.SetActive(true);
+
         StartCoroutine(stunCooldown());
     }
 
@@ -194,11 +197,15 @@ public class PlayerInputs : MonoBehaviour
     IEnumerator stunCooldown()
     {
         yield return new WaitForSeconds(2f);
+
+        stunEffect.SetActive(false);
+
+        //why is this line here?
         attackObject.SetActive(false);
+
         isStunned = false;
         canUseAbility = true;
         canMove = true;
-        print("done stun");
     }
     #endregion
 
@@ -336,6 +343,8 @@ public class PlayerInputs : MonoBehaviour
         isDodging = true;
         animator.SetTrigger("Slide");
 
+        slideEffect.SetActive(true);
+
         // adds a force to the player, spped can be adjusted with dodgeMultiplier
         rb.AddForce(transform.forward * dodgeSpeedMultiplier, ForceMode.Impulse);
 
@@ -348,6 +357,7 @@ public class PlayerInputs : MonoBehaviour
         canMove = true;
         canUseAbility = true;
         isDodging = false;
+        slideEffect.SetActive(false);
     }
     #endregion
 
