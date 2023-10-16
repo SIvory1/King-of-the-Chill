@@ -10,8 +10,8 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     // give every manager we use a refernce here so we can just go through the game manager to use them
-    public UIManager uiManager { get; private set; }
-
+    public UIManager uiManager; 
+    public SFXManager audioManager; 
 
     private void Awake()
     {
@@ -31,5 +31,6 @@ public class GameManager : MonoBehaviour
     void InitManagers()
     {
         uiManager = GetComponent<UIManager>();
+        audioManager = GetComponent<SFXManager>();
     }
 }

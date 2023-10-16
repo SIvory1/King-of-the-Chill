@@ -171,6 +171,8 @@ public class PlayerInputs : MonoBehaviour
         // noise and animation
         animator.SetTrigger("Stun");
 
+   
+
         stunEffect.SetActive(true);
 
         StartCoroutine(stunCooldown());
@@ -182,6 +184,8 @@ public class PlayerInputs : MonoBehaviour
     public void PlayerTakenDmg()
     {
         animator.SetTrigger("Take Damage");
+
+        GameManager.instance.audioManager.TakenDmg();
 
         isStunned = false;
         canUseAbility = true;
@@ -236,7 +240,7 @@ public class PlayerInputs : MonoBehaviour
     #endregion
 
     #region Lunge
-    // the lunge is to seperate amiamtions, we first use charge and then at the end of 
+    // the lunge is 2 seperate amiamtions, we first use charge and then at the end of 
     // the charge a keyframe calls the start lunge which also has keyframes 
     private void DoLunge(InputAction.CallbackContext obj)
     {
@@ -255,9 +259,12 @@ public class PlayerInputs : MonoBehaviour
 
     public void StartLungeKeyframe()
     {
-        animator.SetTrigger("Lunge");
-        rb.AddForce(transform.forward * lungeForceMultiplier, ForceMode.Impulse);
-        lungeObject.SetActive(true);         
+        if (!isStunned)
+        {
+            animator.SetTrigger("Lunge");
+            rb.AddForce(transform.forward * lungeForceMultiplier, ForceMode.Impulse);
+            lungeObject.SetActive(true);
+        }    
     }
 
     public void EndLungeKeyframe()
