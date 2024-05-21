@@ -13,28 +13,21 @@ public class WaterSplash : MonoBehaviour
     public int bluePoints;
 
 
-    public void OnTriggerEnter(Collider other)
+    public void OnTriggerEnter(Collider col)
     {
-        if (other.gameObject.tag == "Player")
+        if (col.gameObject.tag == "Player")
         {
+            col.gameObject.GetComponent<PlayerInputs>().PlayerDeath();
 
             audioManager.WaterSplash();
 
             // puts particle at where the player intersects with the water 
-            waterHitLocation = other.gameObject.transform.position;
+            waterHitLocation = col.gameObject.transform.position;
             waterParticle.transform.position = waterHitLocation;
             waterParticle.Play();
 
         }
-        if (other.gameObject.name == "Penguin Blue")
-        {
-            bluePoints += 1; 
-        }
 
-        if (other.gameObject.name == "Penguin Red")
-        {
-            redPoints += 1;
-        }
     }
 
 }

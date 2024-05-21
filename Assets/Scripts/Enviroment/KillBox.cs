@@ -14,8 +14,10 @@ public class KillBox : MonoBehaviour
     {
         if (col.gameObject.CompareTag("Player"))
         {
-             col.gameObject.GetComponent<PlayerInputs>().Respawn();
-           //  col.gameObject.GetComponent<PlayerInputs>().isFalling = true;
+
+            col.gameObject.GetComponent<PlayerInputs>().Respawn();
+            //  col.gameObject.GetComponent<PlayerInputs>().isFalling = true;
+
 
             col.gameObject.transform.position = spawnPoint.position;
             audioManager.PlayerFall();

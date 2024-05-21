@@ -56,6 +56,9 @@ public class Manager : MonoBehaviour
 
     public void Update()
     {
+        if (roundTimer > 0)
+        {
+
         if (roundStarted == true)
         {
            roundTimer -= Time.deltaTime;
@@ -67,23 +70,19 @@ public class Manager : MonoBehaviour
             roundTimer = 0;
             roundStarted = false;
         }
+        }
 
-        redScore.text = "" + points.redPoints;
-        blueScore.text = "" + points.bluePoints;
+        //   redScore.text = "" + points.redPoints;
+        //   blueScore.text = "" + points.bluePoints;
 
-        if (roundTimer <= 0 && points.bluePoints > points.redPoints)
+        if (roundTimer <= 0)
         {
-            SceneManager.LoadScene(2);
+            SceneManager.LoadScene(1);
         }
         else if (roundTimer <= 0 && points.redPoints > points.bluePoints)
             SceneManager.LoadScene(3);
 
-        if (roundTimer <= 0 && points.bluePoints == points.redPoints)
-        {
-            roundTimer += 30f;
-            DisplayTime(roundTimer);
-            roundStarted = true;
-        }
+    //    if (roundTimer <= 0 && points.bluePoints == points.redPoints){ roundTimer += 30f;DisplayTime(roundTimer);roundStarted = true; }
     }
 
 
@@ -123,6 +122,7 @@ public class Manager : MonoBehaviour
     //Function which starts the game and disables the current active menu UI
     public void StartGame()
     {
+        GameManager.instance.startedGame = true;
         Time.timeScale = 1;
         mpHostUI.gameObject.SetActive(false);
         audioManager.AmbientOcean();

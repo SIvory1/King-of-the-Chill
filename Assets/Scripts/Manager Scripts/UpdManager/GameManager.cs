@@ -9,6 +9,10 @@ public class GameManager : MonoBehaviour
 
     public static GameManager instance;
 
+    public int noOfPlayer;
+
+    public bool startedGame;
+
     // give every manager we use a refernce here so we can just go through the game manager to use them
     public UIManager uiManager; 
     public SFXManager audioManager; 

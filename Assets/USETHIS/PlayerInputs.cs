@@ -1,9 +1,13 @@
 using System;
 using System.Collections;
+using TMPro;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 // THEY TOO DAMN SLIDY< THIS GAME DOESNT WORK RN< ICE BERG NEEDS WORK< IT LOOKS BAD< JUST EVEREYTHIGN
+
+// list of colour, name in right spot
 public class PlayerInputs : MonoBehaviour
 {
     // https://www.youtube.com/watch?v=l9HrraxtdGY
@@ -69,6 +73,8 @@ public class PlayerInputs : MonoBehaviour
         canBeHit = true;
         blockCooldownFinished = false;
         canMove = true;
+
+        AssignScoreboard();
     }
 
     //reason we do this with direct refernces to strings is so the system can tell the difference between inputsystems
@@ -108,34 +114,86 @@ public class PlayerInputs : MonoBehaviour
         GameManager.instance.uiManager.PauseGame();
     }
 
+    // maybe want to move all this score stuff to a different script to differnetiate movement and points
+    // learn to abstarct dweep
     #region points and death
 
     // each player is given a piece of ui when they spawn in, when they die they call a functiuon
     // in ui manager that will update, make it so that it sends through which ui it is 
 
-    GameObject currentEnemy;
+    void AssignScoreboard()
+    {
+        // bad etiquiete, shoudl proably have a script higher in the hiercahy make this call
+        // we dont want the scripts at the bottom to make effects to the scirpts up higher i.e player effecting the game manager
+
+        scoreBoardUI = GameManager.instance.uiManager.playerScoreBoardArray[GameManager.instance.noOfPlayer];
+        ApplyMaterialToAllRenderers(gameObject, GameManager.instance.uiManager.colourArray[GameManager.instance.noOfPlayer]);
+
+        GameManager.instance.noOfPlayer++;
+
+        scoreBoardUI.SetActive(true);
+        // gameObject.GetComponentInChildren<Renderer>().material = GameManager.instance.uiManager.colourArray[GameManager.instance.noOfPlayer];
+
+    }
+
+    void ApplyMaterialToAllRenderers(GameObject obj, Material material)
+    {
+        // Get all Renderer components in the object and its children
+        Renderer[] renderers = obj.GetComponentsInChildren<Renderer>();
+
+        foreach (Renderer renderer in renderers)
+        {
+        
+          if (renderer.gameObject.name == "FishWeapon:pCube1")
+          {
+                continue;
+          }
+
+            // Get the number of submeshes
+            int subMeshCount = renderer.sharedMaterials.Length;
+
+            // Create an array to hold the new materials
+            Material[] newMaterials = new Material[subMeshCount];
+
+            // Assign the new material to each submesh
+            for (int i = 0; i < subMeshCount; i++)
+            {
+                newMaterials[i] = material;
+            }
+
+            // Apply the new materials to the renderer
+            renderer.materials = newMaterials;
+        }
+    }
+
+
+
+
+// if you are hit by an enemy, you hold that refernce, if you die in that time
+//, they are assigned the points
+public GameObject enemyThatLandedAttack;
     public void HitByEnemy(GameObject assignedEnemy)
     {
-        // if player falls off and dies withotu beign hit they will lose a point? cap at zero
-        currentEnemy = assignedEnemy;
-        StartCoroutine(ReassignEnemy());
+        enemyThatLandedAttack = assignedEnemy;
+
+       //  StartCoroutine(ReassignEnemy());
     }
 
     IEnumerator ReassignEnemy()
     {
-        yield return new WaitForSeconds(3);
-        currentEnemy = null;
+        yield return new WaitForSeconds(4);
+
+        enemyThatLandedAttack = null;
     }
 
     public void PlayerDeath()
-    {     
-        if (currentEnemy != null)
+    {
+        if (enemyThatLandedAttack != null)
         {
-            // probs clean this up cause its stupid having the player hold its own ui? maybe?
-            currentEnemy.GetComponent<PlayerInputs>().currentPoints += 1;
-            GameManager.instance.uiManager.UpdateScoreboardUI(currentEnemy.GetComponent<PlayerInputs>().scoreBoardUI, 
-            currentEnemy.GetComponent<PlayerInputs>().currentPoints);
-        }    
+            enemyThatLandedAttack.GetComponent<PlayerInputs>().currentPoints += 1;
+            enemyThatLandedAttack.GetComponent<PlayerInputs>().scoreBoardUI.GetComponentInChildren<TextMeshProUGUI>().text
+          = enemyThatLandedAttack.GetComponent<PlayerInputs>().currentPoints + "";
+        }
     }
 
     // fall animation is so fucking bad bro omg why does it make you go in the air fucking prober bro
@@ -185,7 +243,7 @@ public class PlayerInputs : MonoBehaviour
     {
         animator.SetTrigger("Take Damage");
 
-        GameManager.instance.audioManager.TakenDmg();
+      //  GameManager.instance.audioManager.TakenDmg();
 
         isStunned = false;
         canUseAbility = true;
@@ -272,7 +330,6 @@ public class PlayerInputs : MonoBehaviour
         lungeObject.SetActive(false);
         currentSpeed = maxSpeed;
         canUseAbility = true;
-        print("john");
     }
     #endregion
 

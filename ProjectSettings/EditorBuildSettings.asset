@@ -6,21 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/LocalGameScene.unity
-    guid: a70410268ff379143b6df25d09711e1b
-  - enabled: 0
-    path: 
-    guid: 00000000000000000000000000000000
-  - enabled: 1
-    path: Assets/Scenes/BlueWinCutscene.unity
-    guid: 3da0327180cc1a84fa248af4ee07bb22
+    path: Assets/Scenes/Testing.unity
+    guid: 95c6909730e1d554993305d6dca8f573
   - enabled: 1
     path: Assets/Scenes/RedWinCutscene.unity
     guid: b147c92dc62eab3438b468a966adb3ec
-  - enabled: 1
-    path: Assets/Scripts/Photon/Photon Testing.unity
-    guid: 9bd9a412f4b76624084086fcac64b194
-  - enabled: 1
-    path: Assets/Scripts/Photon/Loading.unity
-    guid: 24e7a68daa4a924439547a1c127911e0
   m_configObjects: {}

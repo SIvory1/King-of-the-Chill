@@ -23,13 +23,17 @@ public class IcebergMelting : MonoBehaviour
 
     private IEnumerator IcebergMeltEnum()
     {
-        while (icebergSections.Count > 0)
-        {
-           // Debug.Log(icebergSections.Count);
-            yield return new WaitForSeconds(crackTimer);
 
-            // Play SFX
-            audioManager.IceCrack();
+    
+            while (icebergSections.Count > 0)
+        {
+           
+                // Debug.Log(icebergSections.Count);
+                yield return new WaitForSeconds(crackTimer);
+            if (GameManager.instance.startedGame)
+            {
+                // Play SFX
+                audioManager.IceCrack();
 
             // Get Section
             GameObject icebergSection = icebergSections[Random.Range(0, icebergSections.Count-1)];
@@ -43,5 +47,8 @@ public class IcebergMelting : MonoBehaviour
             // Destroy Iceberg After Time
             Destroy(icebergSection, meltTimer);
         }
+        }
+
+
     }
 }
